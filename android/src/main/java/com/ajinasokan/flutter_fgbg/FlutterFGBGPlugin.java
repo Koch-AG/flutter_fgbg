@@ -30,15 +30,19 @@ public class FlutterFGBGPlugin implements FlutterPlugin, ActivityAware, Lifecycl
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     new EventChannel(flutterPluginBinding.getBinaryMessenger(), "com.ajinasokan.flutter_fgbg/events")
             .setStreamHandler(this);
-  }
-
-  @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {}
-
-  @Override
-  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
     ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
   }
+
+  @Override
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    ProcessLifecycleOwner.get().getLifecycle().removeObserver(this);
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {}
+
+  @Override
+  public void onDetachedFromActivity() {}
 
   @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
   void onAppBackgrounded() {
@@ -59,9 +63,4 @@ public class FlutterFGBGPlugin implements FlutterPlugin, ActivityAware, Lifecycl
 
   @Override
   public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {}
-
-  @Override
-  public void onDetachedFromActivity() {
-    ProcessLifecycleOwner.get().getLifecycle().removeObserver(this);
-  }
 }
